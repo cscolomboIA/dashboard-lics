@@ -11,7 +11,6 @@ except:
     st.set_page_config(page_title="Dashboard LICS", layout="wide", page_icon="🧬")
 
 # --- BARRA LATERAL (APENAS LOGO E INFO) ---
-# Tiramos os filtros daqui para colocar no topo. A sidebar fica apenas para identidade visual.
 if os.path.exists("logo_lics.jpg"):
     st.sidebar.image("logo_lics.jpg", use_container_width=True)
     st.sidebar.markdown("---")
@@ -54,13 +53,11 @@ except Exception as e:
     st.stop()
 
 # --- PAINEL DE FILTROS HORIZONTAL (TOP BAR) ---
-# Aqui está a mágica: Um container com borda que agrupa os filtros no topo
 with st.container(border=True):
-    st.markdown("###### ⚙️ Filtros de Visualização") # Título pequeno para não gastar espaço
+    st.markdown("###### Filtros de Visualização")
     col_f1, col_f2, col_f3 = st.columns(3)
     
     with col_f1:
-        # 1. Origem (Usando horizontal=True para economizar altura)
         modo_visualizacao = st.radio(
             "Origem dos Dados:",
             ("Apenas LICS", "Todos (LICS + IFES)"),
@@ -69,7 +66,6 @@ with st.container(border=True):
         )
 
     with col_f2:
-        # 2. Situação (Horizontal também)
         filtro_situacao = st.radio(
             "Situação:",
             ("Tudo", "Concluídos/Aceitos", "Em Andamento"),
@@ -78,7 +74,6 @@ with st.container(border=True):
         )
 
     with col_f3:
-        # 3. Ano (Multiselect é o mais compacto para várias opções)
         anos_disponiveis = sorted(df['Ano'].unique())
         anos_selecionados = st.multiselect(
             "Anos:",
@@ -88,13 +83,11 @@ with st.container(border=True):
         )
 
 # --- LÓGICA DE FILTRAGEM ---
-# Filtro 1: Vínculo
 if modo_visualizacao == "Apenas LICS":
     df_filtered = df[df['Vinculo'] == 'LICS']
 else:
     df_filtered = df 
 
-# Filtro 2: Situação
 if filtro_situacao == "Concluídos/Aceitos":
     termos_positivos = ['Aceito', 'Concluído', 'Certificado', 'Habilitado']
     df_filtered = df_filtered[df_filtered['Status'].str.contains('|'.join(termos_positivos), case=False, na=False)]
@@ -102,15 +95,14 @@ elif filtro_situacao == "Em Andamento":
     termos_andamento = ['Em andamento', 'Submissão', 'Julgamento', 'Rejeitado']
     df_filtered = df_filtered[df_filtered['Status'].str.contains('|'.join(termos_andamento), case=False, na=False)]
 
-# Filtro 3: Ano
 df_filtered = df_filtered[df_filtered['Ano'].isin(anos_selecionados)]
 
 if df_filtered.empty:
-    st.warning("⚠️ Nenhum dado encontrado. Ajuste os filtros acima.")
+    st.warning("Nenhum dado encontrado. Ajuste os filtros acima.")
     st.stop()
 
 # --- METRICAS PRINCIPAIS (KPIs) ---
-st.markdown("---") # Separação visual leve
+st.markdown("---")
 col1, col2, col3, col4 = st.columns(4)
 col1.metric("Total de Atividades", len(df_filtered))
 col2.metric("Envolvimento de Alunos", int(df_filtered['Total_Alunos'].sum()))
@@ -118,7 +110,7 @@ col3.metric("Produção Científica", len(df_filtered[df_filtered['Tipo da ativi
 col4.metric("Projetos & Inovação", len(df_filtered[df_filtered['Tipo da atividade'].str.contains("Projeto|Programa|Inovação", case=False, na=False)]))
 
 # --- GRÁFICOS (ABAS) ---
-tab1, tab2, tab3 = st.tabs(["📊 Visão Geral", "🎓 Envolvimento Discente", "📋 Dados Detalhados"])
+tab1, tab2, tab3 = st.tabs(["Visão Geral", "Envolvimento Discente", "Dados Detalhados"])
 
 with tab1:
     col_g1, col_g2 = st.columns(2)
@@ -126,11 +118,42 @@ with tab1:
         st.subheader("Taxa de Sucesso")
         fig_status = px.pie(df_filtered, names='Status', title='Distribuição por Status', hole=0.4)
         st.plotly_chart(fig_status, use_container_width=True)
+    
     with col_g2:
         st.subheader("Atividades por Categoria")
+        
+        # --- MELHORIA DE UX AQUI ---
+        # 1. Preparar os dados com contagem E porcentagem
         contagem_tipo = df_filtered['Tipo da atividade'].value_counts().reset_index()
         contagem_tipo.columns = ['Tipo', 'Quantidade']
-        fig_tipo = px.bar(contagem_tipo, x='Quantidade', y='Tipo', orientation='h')
+        contagem_tipo['Percentual'] = (contagem_tipo['Quantidade'] / contagem_tipo['Quantidade'].sum()) * 100
+        
+        # 2. Criar gráfico com gradiente de cor e ordenação
+        fig_tipo = px.bar(
+            contagem_tipo, 
+            x='Quantidade', 
+            y='Tipo', 
+            orientation='h',
+            text='Quantidade', # Mostra o número na ponta da barra
+            color='Quantidade', # A cor muda conforme o valor (Heatmap)
+            color_continuous_scale='Teal', # Escala de cor profissional (Teal combina com saúde)
+            custom_data=['Percentual'] # Passa o percentual para o tooltip
+        )
+        
+        # 3. Ajustes finos de Layout
+        fig_tipo.update_layout(
+            yaxis={'categoryorder':'total ascending'}, # Garante que a maior barra fique no topo
+            coloraxis_showscale=False, # Esconde a legenda de cores para limpar o visual
+            xaxis_title=None,
+            yaxis_title=None
+        )
+        
+        # 4. Tooltip personalizado (Ao passar o mouse)
+        fig_tipo.update_traces(
+            textposition='outside', 
+            hovertemplate='<b>%{y}</b><br>Quantidade: %{x}<br>Representatividade: %{customdata[0]:.1f}%<extra></extra>'
+        )
+        
         st.plotly_chart(fig_tipo, use_container_width=True)
 
     st.subheader("Evolução Temporal")
@@ -148,10 +171,21 @@ with tab2:
             df_filtered['Alunos_BSI'].sum()
         ]
     })
-    fig_alunos = px.bar(dados_alunos, x='Nível de Ensino', y='Quantidade', color='Nível de Ensino', text='Quantidade')
+    # Também aplicando a melhoria visual aqui para consistência
+    fig_alunos = px.bar(
+        dados_alunos, 
+        x='Nível de Ensino', 
+        y='Quantidade', 
+        color='Quantidade', # Cor baseada no valor
+        color_continuous_scale='Greens', # Escala verde para diferenciar da outra aba
+        text='Quantidade'
+    )
     fig_alunos.update_traces(textposition='outside')
+    fig_alunos.update_layout(coloraxis_showscale=False, yaxis_title=None, xaxis_title=None)
+    
     st.plotly_chart(fig_alunos, use_container_width=True)
 
 with tab3:
     st.subheader("Tabela de Registros Filtrados")
-    st.dataframe(df_filtered, use_container_width=True)
+    # Melhoria na tabela: Ocultar o índice numérico padrão do Pandas para ficar mais limpo
+    st.dataframe(df_filtered.set_index('Ano'), use_container_width=True)
