@@ -45,7 +45,7 @@ def load_data():
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
     df['Total_Alunos'] = df[cols_alunos].sum(axis=1)
 
-    # --- NOVA LÓGICA DE CATEGORIZAÇÃO (SEM ÍCONES) ---
+    # --- CATEGORIZAÇÃO (SEM ÍCONES) ---
     def definir_categoria(tipo):
         tipo = str(tipo).lower()
         if any(x in tipo for x in ['inovação', 'startup', 'gênesis', 'centelha', 'software', 'patente', 'grupo', 'incubação']):
@@ -69,7 +69,7 @@ except Exception as e:
     st.error(f"Erro ao processar dados: {e}")
     st.stop()
 
-# --- PAINEL DE FILTROS HORIZONTAL (TOP BAR) ---
+# --- PAINEL DE FILTROS HORIZONTAL ---
 with st.container(border=True):
     st.markdown("###### Filtros de Visualização")
     col_f1, col_f2, col_f3 = st.columns(3)
@@ -118,9 +118,18 @@ if df_filtered.empty:
     st.warning("Nenhum dado encontrado. Ajuste os filtros acima.")
     st.stop()
 
+# --- MAPA DE CORES CONSISTENTE ---
+# Definindo as cores uma única vez para usar em todos os gráficos
+mapa_cores = {
+    'Inovação & Startups': '#FF4B4B', # Vermelho
+    'Produção Intelectual': '#1C83E1', # Azul
+    'Formação & Orientações': '#00CC96', # Verde
+    'Eventos & Divulgação': '#FFA15A', # Laranja
+    'Outros': '#d3d3d3' # Cinza
+}
+
 # --- METRICAS PRINCIPAIS (KPIs) ---
 st.markdown("---")
-# Recalculando KPIs baseados nas novas categorias
 total_inovacao = len(df_filtered[df_filtered['Categoria_Macro'] == 'Inovação & Startups'])
 total_intelectual = len(df_filtered[df_filtered['Categoria_Macro'] == 'Produção Intelectual'])
 total_formacao = len(df_filtered[df_filtered['Categoria_Macro'] == 'Formação & Orientações'])
@@ -142,35 +151,38 @@ with tab1:
         fig_cat = px.pie(
             df_filtered, 
             names='Categoria_Macro', 
-            title='Onde o LICS concentra esforços?', 
+            title='Proporção das Áreas de Atuação', 
             hole=0.4,
             color='Categoria_Macro',
-            color_discrete_map={
-                'Inovação & Startups': '#FF4B4B', 
-                'Produção Intelectual': '#1C83E1', 
-                'Formação & Orientações': '#00CC96', 
-                'Eventos & Divulgação': '#FFA15A', 
-                'Outros': '#d3d3d3'
-            }
+            color_discrete_map=mapa_cores
         )
         st.plotly_chart(fig_cat, use_container_width=True)
     
     with col_g2:
-        st.subheader("Detalhamento das Ações")
-        df_bar = df_filtered.groupby(['Categoria_Macro', 'Tipo da atividade']).size().reset_index(name='Quantidade')
+        st.subheader("Ranking de Atividades (Volume)")
+        # Agrupamento para contar quantos itens tem em cada tipo específico
+        df_ranking = df_filtered.groupby(['Tipo da atividade', 'Categoria_Macro']).size().reset_index(name='Quantidade')
         
-        fig_bar = px.bar(
-            df_bar, 
+        # Gráfico de Barras Simples e Limpo
+        fig_ranking = px.bar(
+            df_ranking, 
             x='Quantidade', 
-            y='Categoria_Macro', 
-            color='Tipo da atividade', 
+            y='Tipo da atividade', 
+            color='Categoria_Macro', # A cor indica a qual grupo pertence
             orientation='h',
             text='Quantidade',
-            title="Composição de cada Categoria",
-            labels={'Categoria_Macro': 'Área de Atuação'}
+            title="O que mais produzimos? (Top Atividades)",
+            color_discrete_map=mapa_cores
         )
-        fig_bar.update_layout(yaxis={'categoryorder':'total ascending'})
-        st.plotly_chart(fig_bar, use_container_width=True)
+        
+        # Ordena do maior para o menor
+        fig_ranking.update_layout(
+            yaxis={'categoryorder':'total ascending'}, 
+            legend_title_text='Área',
+            xaxis_title=None,
+            yaxis_title=None
+        )
+        st.plotly_chart(fig_ranking, use_container_width=True)
 
     st.subheader("Evolução das Categorias (2024-2025)")
     df_evolucao = df_filtered.groupby(['Ano', 'Categoria_Macro']).size().reset_index(name='Quantidade')
@@ -180,7 +192,8 @@ with tab1:
         y="Quantidade", 
         color="Categoria_Macro", 
         barmode='group',
-        text='Quantidade'
+        text='Quantidade',
+        color_discrete_map=mapa_cores
     )
     fig_evolucao.update_traces(textposition='outside')
     st.plotly_chart(fig_evolucao, use_container_width=True)
