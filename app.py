@@ -46,21 +46,31 @@ def load_data():
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
     df['Total_Alunos'] = df[cols_alunos].sum(axis=1)
 
-    # Normaliza o texto da atividade (remove quebras de linha e espaços extras)
+    # Normaliza o texto da atividade
     df['Tipo da atividade'] = df['Tipo da atividade'].str.replace('\n', ' ').str.strip()
 
-    # --- FILTRO DE EXCLUSÃO (ATUALIZADO) ---
+    # --- LÓGICA DE FILTRAGEM DE ATIVIDADES ---
+    
+    # 1. Lista de exclusão GERAL (O que nunca deve aparecer)
+    # Nota: Retirei "Submissão de Artigo Científico" daqui para tratar no passo 2
     atividades_para_remover = [
         "Apresentação de Trabalho em Evento Científico",
         "Criação de Grupo de Pesquisa",
         "Participação em Evento Científico",
-        "Submissão de Artigo Científico",
         "Submissão de Projeto de Iniciação Científica",
         "Submissão de Projeto de Inovação Tecnológica",
         "Submissão de Projeto de Pesquisa"
     ]
-    # Mantém apenas o que NÃO está na lista de exclusão
     df = df[~df['Tipo da atividade'].isin(atividades_para_remover)]
+
+    # 2. Regra Específica para Artigos:
+    # Remover "Submissão de Artigo Científico" APENAS SE o status NÃO for "Aceito"
+    # Lógica: Se for Artigo E (Status não contém Aceito) -> Remove
+    condicao_remover_artigo = (
+        (df['Tipo da atividade'] == 'Submissão de Artigo Científico') & 
+        (~df['Status'].str.contains('Aceito', case=False, na=False))
+    )
+    df = df[~condicao_remover_artigo]
 
     # Categorização Macro
     def definir_categoria(tipo):
@@ -185,7 +195,7 @@ with tab1:
         # Selectbox
         lista_atividades = sorted(df_filtered['Tipo da atividade'].unique())
         
-        # Verifica se há atividades disponíveis após o filtro de exclusão
+        # Verifica se há atividades disponíveis
         if len(lista_atividades) > 0:
             atividade_selecionada = st.selectbox("Selecione a atividade:", options=lista_atividades)
             
@@ -198,11 +208,12 @@ with tab1:
             fig_atividade.update_layout(margin=dict(l=0, r=0, t=10, b=0), xaxis=dict(tickmode='linear', dtick=1))
             st.plotly_chart(fig_atividade, use_container_width=True)
             
-            # Lista
+            # Lista (SEM ÍNDICE)
             with st.expander(f"Ver lista de títulos ({len(df_atividade)})", expanded=True):
                 st.dataframe(
                     df_atividade[['Ano', 'Titulo', 'Status']].reset_index(drop=True),
-                    use_container_width=True
+                    use_container_width=True,
+                    hide_index=True
                 )
         else:
             st.warning("Não há atividades para mostrar com os filtros atuais.")
