@@ -10,52 +10,31 @@ try:
 except:
     st.set_page_config(page_title="Dashboard LICS", layout="wide", page_icon="🧬")
 
-# --- BARRA LATERAL (SIDEBAR) ---
+# --- BARRA LATERAL (APENAS LOGO E INFO) ---
+# Tiramos os filtros daqui para colocar no topo. A sidebar fica apenas para identidade visual.
 if os.path.exists("logo_lics.jpg"):
     st.sidebar.image("logo_lics.jpg", use_container_width=True)
-else:
-    st.sidebar.warning("Logo não encontrada")
-
-st.sidebar.markdown("---") 
+    st.sidebar.markdown("---")
+    st.sidebar.info("**LICS - Laboratório de Inteligência Computacional na Saúde**\n\nCoordenação: Prof. Cristiano da Silveira Colombo")
 
 # --- CABEÇALHO PRINCIPAL ---
 col_header1, col_header2 = st.columns([1, 6])
 with col_header1:
     if os.path.exists("logo_lics.jpg"):
-        st.image("logo_lics.jpg", width=110)
+        st.image("logo_lics.jpg", width=100)
 with col_header2:
-    st.title("LICS - Laboratório de Inteligência Computacional na Saúde")
-    st.markdown("**Coordenação:** Prof. Cristiano da Silveira Colombo | **Atualização:** Dez/2025")
-
-# --- SEÇÃO INTRODUTÓRIA ---
-st.markdown("---")
-st.markdown("""
-### Painel de Controle Estratégico
-Este dashboard apresenta o monitoramento em tempo real das ações de pesquisa, desenvolvimento e inovação (PD&I).
-Os dados consolidam o ciclo **2024-2025**, oferecendo transparência sobre três pilares fundamentais:
-
-*   **Produção Científica:** Artigos em periódicos e eventos de alto impacto focados em IA na Saúde.
-*   **Ecossistema de Inovação:** Startups (Programas Gênesis/Centelha) e projetos de fomento.
-*   **Formação de Talentos:** Envolvimento de discentes do Técnico Integrado ao Bacharelado.
-
-**Guia de Navegação:**
-*   **Visão Geral:** Estatísticas de aprovação e evolução temporal.
-*   **Envolvimento Discente:** Quantitativo de alunos capacitados.
-*   **Dados Detalhados:** Tabela completa para consulta.
-""")
-st.markdown("---")
+    st.title("Painel de Controle Estratégico")
+    st.markdown("Monitoramento de ações de Pesquisa, Inovação e Formação (Ciclo 2024-2025)")
 
 # --- CARREGAMENTO DE DADOS ---
 @st.cache_data
 def load_data():
     df = pd.read_csv("dados.csv")
-    
     novos_nomes = [
         'Ano', 'Tipo da atividade', 'Titulo', 'Evento_Periodico', 'Data', 
         'Carga_Horaria', 'Autores', 'Qualis', 'Alunos_Tec_Integrado',  
         'Alunos_Tec_Concomitante', 'Alunos_BSI', 'Status', 'Vinculo'
     ]
-    
     if len(df.columns) == len(novos_nomes):
         df.columns = novos_nomes
     else:
@@ -65,7 +44,6 @@ def load_data():
     cols_alunos = ['Alunos_Tec_Integrado', 'Alunos_Tec_Concomitante', 'Alunos_BSI']
     for col in cols_alunos:
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
-    
     df['Total_Alunos'] = df[cols_alunos].sum(axis=1)
     return df
 
@@ -75,70 +53,72 @@ except Exception as e:
     st.error(f"Erro ao processar dados: {e}")
     st.stop()
 
-# --- FILTROS INTUITIVOS (SIDEBAR NOVA) ---
-st.sidebar.header("Painel de Filtros")
+# --- PAINEL DE FILTROS HORIZONTAL (TOP BAR) ---
+# Aqui está a mágica: Um container com borda que agrupa os filtros no topo
+with st.container(border=True):
+    st.markdown("###### ⚙️ Filtros de Visualização") # Título pequeno para não gastar espaço
+    col_f1, col_f2, col_f3 = st.columns(3)
+    
+    with col_f1:
+        # 1. Origem (Usando horizontal=True para economizar altura)
+        modo_visualizacao = st.radio(
+            "Origem dos Dados:",
+            ("Apenas LICS", "Todos (LICS + IFES)"),
+            index=0,
+            horizontal=True
+        )
 
-# 1. Filtro de Vínculo (Radio Button - Mais intuitivo)
-st.sidebar.subheader("1. Origem dos Dados")
-modo_visualizacao = st.sidebar.radio(
-    "Escolha o escopo:",
-    ("Apenas LICS", "Todos (LICS + IFES)"),
-    index=0 # Começa marcado o primeiro (LICS)
-)
+    with col_f2:
+        # 2. Situação (Horizontal também)
+        filtro_situacao = st.radio(
+            "Situação:",
+            ("Tudo", "Concluídos/Aceitos", "Em Andamento"),
+            index=0,
+            horizontal=True
+        )
 
-# Lógica do Filtro de Vínculo
+    with col_f3:
+        # 3. Ano (Multiselect é o mais compacto para várias opções)
+        anos_disponiveis = sorted(df['Ano'].unique())
+        anos_selecionados = st.multiselect(
+            "Anos:",
+            options=anos_disponiveis,
+            default=anos_disponiveis,
+            placeholder="Selecione os anos"
+        )
+
+# --- LÓGICA DE FILTRAGEM ---
+# Filtro 1: Vínculo
 if modo_visualizacao == "Apenas LICS":
     df_filtered = df[df['Vinculo'] == 'LICS']
 else:
-    df_filtered = df # Pega tudo
+    df_filtered = df 
 
-# 2. Filtro de Ano (Checkboxes - Sempre visíveis)
-st.sidebar.subheader("2. Período")
-col_ano1, col_ano2 = st.sidebar.columns(2)
-ver_2024 = col_ano1.checkbox("2024", value=True)
-ver_2025 = col_ano2.checkbox("2025", value=True)
-
-# Lógica do Filtro de Ano
-anos_selecionados = []
-if ver_2024: anos_selecionados.append(2024)
-if ver_2025: anos_selecionados.append(2025)
-
-# 3. Filtro de Situação (Simplificado)
-st.sidebar.subheader("3. Situação")
-filtro_situacao = st.sidebar.radio(
-    "O que deseja ver?",
-    ("Tudo", "Apenas Concluídos/Aceitos", "Em Andamento/Submissões")
-)
-
-# Lógica do Filtro de Status
-if filtro_situacao == "Apenas Concluídos/Aceitos":
-    # Lista de termos que indicam sucesso
+# Filtro 2: Situação
+if filtro_situacao == "Concluídos/Aceitos":
     termos_positivos = ['Aceito', 'Concluído', 'Certificado', 'Habilitado']
-    # Filtra onde o status contém qualquer um desses termos
     df_filtered = df_filtered[df_filtered['Status'].str.contains('|'.join(termos_positivos), case=False, na=False)]
-elif filtro_situacao == "Em Andamento/Submissões":
-    termos_andamento = ['Em andamento', 'Submissão', 'Julgamento', 'Rejeitado'] # Rejeitado entra aqui como "Tentativas" ou pode ser removido
+elif filtro_situacao == "Em Andamento":
+    termos_andamento = ['Em andamento', 'Submissão', 'Julgamento', 'Rejeitado']
     df_filtered = df_filtered[df_filtered['Status'].str.contains('|'.join(termos_andamento), case=False, na=False)]
 
-# Aplica filtro final de Ano
+# Filtro 3: Ano
 df_filtered = df_filtered[df_filtered['Ano'].isin(anos_selecionados)]
 
-# Aviso se não tiver dados
 if df_filtered.empty:
-    st.warning("⚠️ Nenhum dado encontrado para os filtros selecionados.")
+    st.warning("⚠️ Nenhum dado encontrado. Ajuste os filtros acima.")
     st.stop()
 
 # --- METRICAS PRINCIPAIS (KPIs) ---
+st.markdown("---") # Separação visual leve
 col1, col2, col3, col4 = st.columns(4)
 col1.metric("Total de Atividades", len(df_filtered))
 col2.metric("Envolvimento de Alunos", int(df_filtered['Total_Alunos'].sum()))
 col3.metric("Produção Científica", len(df_filtered[df_filtered['Tipo da atividade'].str.contains("Artigo", case=False, na=False)]))
 col4.metric("Projetos & Inovação", len(df_filtered[df_filtered['Tipo da atividade'].str.contains("Projeto|Programa|Inovação", case=False, na=False)]))
 
-st.markdown("---")
-
-# --- GRÁFICOS ---
-tab1, tab2, tab3 = st.tabs(["Visão Geral", "Envolvimento Discente", "Dados Detalhados"])
+# --- GRÁFICOS (ABAS) ---
+tab1, tab2, tab3 = st.tabs(["📊 Visão Geral", "🎓 Envolvimento Discente", "📋 Dados Detalhados"])
 
 with tab1:
     col_g1, col_g2 = st.columns(2)
@@ -174,4 +154,4 @@ with tab2:
 
 with tab3:
     st.subheader("Tabela de Registros Filtrados")
-    st.dataframe(df_filtered)
+    st.dataframe(df_filtered, use_container_width=True)
