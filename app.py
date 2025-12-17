@@ -14,7 +14,7 @@ st.markdown("---")
 @st.cache_data
 def load_data():
     # Lê o CSV. 
-    df = pd.read_csv("registros-atividades-LICS-tabuladas.csv")
+    df = pd.read_csv("dados.csv")
     
     # Limpeza dos nomes das colunas (remove quebras de linha e espaços extras)
     df.columns = [c.replace('\n', ' ').strip() for c in df.columns]
