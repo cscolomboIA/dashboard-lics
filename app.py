@@ -10,7 +10,7 @@ try:
 except:
     st.set_page_config(page_title="Dashboard LICS", layout="wide")
 
-# --- BARRA LATERAL (APENAS LOGO E INFO) ---
+# --- BARRA LATERAL ---
 if os.path.exists("logo_lics.jpg"):
     st.sidebar.image("logo_lics.jpg", use_container_width=True)
     st.sidebar.markdown("---")
@@ -40,12 +40,29 @@ def load_data():
         st.error("Erro na estrutura do CSV.")
         st.stop()
     
+    # Tratamento numérico alunos
     cols_alunos = ['Alunos_Tec_Integrado', 'Alunos_Tec_Concomitante', 'Alunos_BSI']
     for col in cols_alunos:
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
     df['Total_Alunos'] = df[cols_alunos].sum(axis=1)
 
-    # Categorização Macro (Sem ícones)
+    # Normaliza o texto da atividade (remove quebras de linha e espaços extras)
+    df['Tipo da atividade'] = df['Tipo da atividade'].str.replace('\n', ' ').str.strip()
+
+    # --- FILTRO DE EXCLUSÃO (ATUALIZADO) ---
+    atividades_para_remover = [
+        "Apresentação de Trabalho em Evento Científico",
+        "Criação de Grupo de Pesquisa",
+        "Participação em Evento Científico",
+        "Submissão de Artigo Científico",
+        "Submissão de Projeto de Iniciação Científica",
+        "Submissão de Projeto de Inovação Tecnológica",
+        "Submissão de Projeto de Pesquisa"
+    ]
+    # Mantém apenas o que NÃO está na lista de exclusão
+    df = df[~df['Tipo da atividade'].isin(atividades_para_remover)]
+
+    # Categorização Macro
     def definir_categoria(tipo):
         tipo = str(tipo).lower()
         if any(x in tipo for x in ['inovação', 'startup', 'gênesis', 'centelha', 'software', 'patente', 'grupo', 'incubação']):
@@ -126,7 +143,7 @@ col4.metric("Alunos Envolvidos", total_alunos)
 tab1, tab2, tab3 = st.tabs(["Visão Estratégica", "Envolvimento Discente", "Dados Detalhados"])
 
 with tab1:
-    # --- PARTE 1: VISÃO MACRO (CATEGORIAS) ---
+    # --- PARTE 1: VISÃO MACRO ---
     col_g1, col_g2 = st.columns(2)
     with col_g1:
         st.subheader("Onde o LICS concentra esforços?")
@@ -156,40 +173,44 @@ with tab1:
         fig_evolucao.update_layout(margin=dict(t=0, b=0), xaxis=dict(tickmode='linear', dtick=1))
         st.plotly_chart(fig_evolucao, use_container_width=True)
 
-    st.markdown("---") # Divisória Visual
+    st.markdown("---")
 
-    # --- PARTE 2: DETALHAMENTO (EXPLORADOR) ---
+    # --- PARTE 2: DETALHAMENTO ---
     col_detalhe_1, col_detalhe_2 = st.columns([2, 1])
     
     with col_detalhe_1:
-        st.subheader("🔎 Explorador de Atividades")
+        st.subheader("Explorador de Atividades")
         st.markdown("Selecione um tipo de atividade para ver a evolução e lista de títulos.")
         
         # Selectbox
         lista_atividades = sorted(df_filtered['Tipo da atividade'].unique())
-        atividade_selecionada = st.selectbox("Selecione a atividade:", options=lista_atividades)
         
-        # Dados filtrados
-        df_atividade = df_filtered[df_filtered['Tipo da atividade'] == atividade_selecionada]
-        
-        # Gráfico pequeno (Sparkline style)
-        grafico_atividade = df_atividade.groupby('Ano').size().reset_index(name='Quantidade')
-        fig_atividade = px.bar(grafico_atividade, x='Ano', y='Quantidade', text='Quantidade', height=250)
-        fig_atividade.update_layout(margin=dict(l=0, r=0, t=10, b=0), xaxis=dict(tickmode='linear', dtick=1))
-        st.plotly_chart(fig_atividade, use_container_width=True)
-        
-        # Lista Expansível
-        with st.expander(f"Ver lista de títulos ({len(df_atividade)})", expanded=True):
-            st.dataframe(
-                df_atividade[['Ano', 'Titulo', 'Status']].reset_index(drop=True),
-                use_container_width=True
-            )
+        # Verifica se há atividades disponíveis após o filtro de exclusão
+        if len(lista_atividades) > 0:
+            atividade_selecionada = st.selectbox("Selecione a atividade:", options=lista_atividades)
+            
+            # Dados filtrados
+            df_atividade = df_filtered[df_filtered['Tipo da atividade'] == atividade_selecionada]
+            
+            # Gráfico pequeno
+            grafico_atividade = df_atividade.groupby('Ano').size().reset_index(name='Quantidade')
+            fig_atividade = px.bar(grafico_atividade, x='Ano', y='Quantidade', text='Quantidade', height=250)
+            fig_atividade.update_layout(margin=dict(l=0, r=0, t=10, b=0), xaxis=dict(tickmode='linear', dtick=1))
+            st.plotly_chart(fig_atividade, use_container_width=True)
+            
+            # Lista
+            with st.expander(f"Ver lista de títulos ({len(df_atividade)})", expanded=True):
+                st.dataframe(
+                    df_atividade[['Ano', 'Titulo', 'Status']].reset_index(drop=True),
+                    use_container_width=True
+                )
+        else:
+            st.warning("Não há atividades para mostrar com os filtros atuais.")
 
     with col_detalhe_2:
-        st.subheader("🏆 Onde Publicamos?")
+        st.subheader("Onde Publicamos?")
         st.markdown("Eventos/Revistas com artigos aceitos:")
         
-        # Filtro inteligente para Hall de Publicações
         termos_artigo = ['artigo', 'publicação', 'revista', 'periódico']
         termos_sucesso = ['aceito', 'concluído', 'publicado']
         
@@ -203,7 +224,7 @@ with tab1:
         if len(eventos_unicos) > 0:
             for evento in eventos_unicos:
                 if evento.strip() != "-":
-                    st.markdown(f"✅ **{evento}**")
+                    st.markdown(f"- **{evento}**")
         else:
             st.info("Nenhum registro encontrado.")
 
