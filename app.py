@@ -17,6 +17,23 @@ except:
 st.sidebar.image("logo_lics.jpg", use_column_width=True) # Exibe a logo grande na barra lateral
 st.sidebar.markdown("---") # Linha divisória
 
+# --- SIDEBAR (FILTROS) ---
+st.sidebar.header("Filtros de Visualização")
+
+# Filtro de Vínculo (Já vem marcado só LICS por padrão, mas permite ver IFES se quiser)
+opcoes_vinculo = sorted(df['Vinculo'].unique())
+vinculo_selecionado = st.sidebar.multiselect("Vínculo", options=opcoes_vinculo, default=["LICS"])
+
+anos = st.sidebar.multiselect("Selecione o Ano", options=sorted(df['Ano'].unique()), default=sorted(df['Ano'].unique()))
+status_filter = st.sidebar.multiselect("Status da Atividade", options=sorted(df['Status'].unique()), default=sorted(df['Status'].unique()))
+
+# Aplicando Filtros
+df_filtered = df[
+    (df['Ano'].isin(anos)) & 
+    (df['Status'].isin(status_filter)) &
+    (df['Vinculo'].isin(vinculo_selecionado))
+]
+
 # --- CABEÇALHO ---
 col_header1, col_header2 = st.columns([1, 5])
 with col_header1:
