@@ -1,0 +1,311 @@
+Ano,Tipo da atividade,Título,Ação/Evento/Periódico,Data,Carga horária,Autores,Qualis,"Alunos do curso técnico 
+integrado ao ensino médio",Alunos do curso técnico concomitante,"Aunos do Bacharelado em 
+Sistemas de Informação",Status,Vínculo
+2024,Submissão de Artigo Científico,"A extração de entidades nomeadas em 
+relatos de casos clínicos","Congresso Brasileiro de 
+Informática em Saúde (CBIS)",30/04/24,-,"Alda Maria Norbiato Torres, 
+Raphael Pavani Manhães Bersot e 
+Cristiano da Silveira Colombo",A4,0,0,2,Aceito,LICS
+2024,"Apresentação de Trabalho 
+em Evento Científico","A extração de entidades nomeadas em 
+relatos de casos clínicos","Congresso Brasileiro de 
+Informática em Saúde (CBIS)",11/10/24,-,"Alda Maria Norbiato Torres, 
+Raphael Pavani Manhães Bersot e 
+Cristiano da Silveira Colombo",A4,0,0,1,Concluído,LICS
+2024,Criação de Grupo de Pesquisa,Laboratório de Inteligência Computacional na Saúde (LICS),Registro de Grupo de Pesquisa no CNPQ,12/11/24,-,Cristiano da Silveira Colombo,-,9,0,5,Certificado,LICS
+2024,Minicurso,"Processamento de linguagem natural: 
+construindo soluções inteligentes",XIII Jacitec,14/11/24,3,"Ana Luiza, Ana Rosa, Arianny, 
+Beatriz, Cauã, Fernanda Oliveira, 
+Lucas Viguini, Maria Júlia",-,7,0,1,Concluído,LICS
+2024,Publicação em Revista Científica,"A extração de entidades nomeadas em 
+relatos de casos clínicos",Journal of Health Informatics,19/11/24,-,"Alda Maria Norbiato Torres, 
+Raphael Pavani Manhães Bersot e 
+Cristiano da Silveira Colombo",A4,0,0,2,Concluído,LICS
+2024,Submissão de Artigo Científico,"Application of Federated Learning in the 
+Detection and Prevention of Fraud in Financial Transactions","Simpósio Brasileiro de 
+Sistemas de Informação (SBSI 2025)",22/11/24,-,"Mirielle Souza, 
+Cristiano da Silveira Colombo, 
+João Paulo de Brito Gonçalves",A4,0,0,1,Rejeitado,IFES
+2024,Submissão de Artigo Científico,"Blockchain and IPFS for Secure Management 
+and Acess to Laboratory Tests","Simpósio Brasileiro de 
+Sistemas de Informação (SBSI 2025)",22/11/24,-,"Milena Linhares, 
+Cristiano da Silveira Colombo, 
+João Paulo de Brito Gonçalves",A4,0,0,1,Aceito,IFES
+2024,Submissão de Artigo Científico,"Machine Learning Model for Classifying 
+Mobility Patterns with Wearable IoT Device","Simpósio Brasileiro de 
+Sistemas de Informação (SBSI 2025)",22/11/24,-,"Júlia Borges Santos, 
+Cristiano da Silveira Colombo, 
+Rafael Guimarães",A4,0,0,1,Rejeitado,IFES
+2024,Submissão de Artigo Científico,Named Entity Recognition in Clinical Case Reports Using spaCy,"Simpósio Brasileiro de 
+Sistemas de Informação (SBSI 2025)",22/11/24,-,"Fernanda de Oliveira Ramos,
+Alda Maria Norbiato Torres,
+Cristiano da Silveira Colombo",A4,0,0,2,Rejeitado,LICS
+2024,Submissão de Artigo Científico,"Wearable IoT Devices: Feasibility and 
+Effectiveness in Implementing Local Decision-Making 
+for Elderly Fall Detection","Simpósio Brasileiro de 
+Sistemas de Informação (SBSI 2025)",22/11/24,-,"Vitor Miller de Toledo, 
+Cristiano da Silveira Colombo, 
+Igor Henrique Beloti Pizetta, 
+Lucas Poubel, 
+Rafael Guimarães",A4,0,0,1,Aceito,IFES
+2024,Submissão de Projeto de Iniciação Científica,"Desenvolvimento de um Aplicativo para 
+Integração com o Dispositivo Inteligente de Armazenamento e 
+Controle de Medicamentos (Health Care Smart)",EDITAL FAPES/SEDU Nº 16/2024 - PICJr 2025,29/11/24,-,Cristiano da Silveira Colombo,-,0,0,2," Proposta não Contratada mas 
+Aprovada no Mérito",LICS
+2024,Submissão de Projeto de Pesquisa,"Plataforma para Análise de Prontuários Médicos e Automação de um 
+Repositório de Condições de Saúde através do uso de IA","EDITAL FAPES Nº 09/2024 - 
+EXTENSÃO TECNOLÓGICA",29/11/24,-,Cristiano da Silveira Colombo,-,2,0,1,Em andamento,LICS
+2024,Orientação de TCC,"Desenvolvimento de modelo NER para a extração 
+de informações em relatos de casos clínicos",-,10/12/24,-,Alda Maria Norbiato Torres,-,0,0,1,Concluído,LICS
+2024,Orientação de TCC,"Ferramenta para Classificação de 
+Entidades Nomeadas em Bulas Farmacêuticas",-,10/12/24,-,Igor Almeida da Silva,-,0,0,1,Concluído,LICS
+2024,Orientação de TCC,"Análise de desempenho de modelos NER para o 
+reconhecimento de entidades nomeadas em bulas farmacêuticas ",-,12/12/24,-,Raphael Pavani Manhães Bersot,-,0,0,1,Concluído,LICS
+2024,Orientação de TCC,"Criação De Um Chatbot Para Responder Dúvidas Sobre Editais De 
+Concursos Com Processamento De Linguagem Natural E Python ",-,12/12/24,-,Rafael Savignon de Resende,-,0,0,1,Concluído,LICS
+2024,Submissão de Projeto de Pesquisa,"Inteligência Artificial Aplicada à Saúde Mental e aos 
+Transtornos de Neurodesenvolvimento: Análise de Prontuários Médicos 
+para a Melhoria e a Otimização do Atendimento de Jovens e Crianças","EDITAL FAPES/CNPq/DECIT-SECTICS-
+MS/SESA Nº 17/2024 - PPSUS",12/12/24,-,Cristiano da Silveira Colombo,-,0,0,4,"Projeto Aprovado em 
+Lista de Espera",LICS
+2024,Orientação de TCC,"O Uso de Large Language Models na Melhoria do 
+Atendimento em Sistemas Socioassistenciais ",-,16/12/24,-,Alessandro Carvalho Santos,-,0,0,1,Concluído,LICS
+2025,Submissão de Artigo Científico,"Reconhecimento de Entidades Nomeadas 
+em Relatos de Casos Clı́nicos utilizando spaCy","XXV Simpósio Brasileiro de Computação 
+Aplicada à Saúde (SBCAS 2025)",17/03/25,-,"Fernanda de Oliveira Ramos,
+Alda Maria Norbiato Torres,
+Cristiano da Silveira Colombo",A4,0,0,2,Rejeitado,LICS
+2025,Submissão de Artigo Científico,Sistema Multiagente para Automação Inteligente de Editais Públicos,"XVII Simpósio Brasileiro de 
+Automação Inteligente (SBAI 2025)",17/03/25,-,"Yves de S. Barbosa,  
+Julia R. Rodrigues, 
+Caio T. Seares, 
+Igor H. B. Pizetta, 
+Cristiano da S. Colombo, 
+Lucas P. T. do Carmo",-,0,0,3,Aceito,IFES
+2025,Submissão de Artigo Científico,"Uma Proposta de Ontologia de 
+Referência no Domı́nio do Câncer de Mama","XXV Simpósio Brasileiro de Computação 
+Aplicada à Saúde (SBCAS 2025)",17/03/25,-,"Agda da S. de Paula (IFES), 
+Beatriz M. C. Ruela (IFES), 
+Cauã G. Marvila (IFES), 
+Fernanda Silva (UNIFACIG), 
+Cristiano da Silveira Colombo (IFES)",A4,2,0,1,Rejeitado,LICS
+2025,"Atuação em programa de pré-incubação 
+voltado à capacitação de empreendedores 
+inovadores (PROEX/AGIFES)",HEALTH+AI,"EDITAL PROEX/AGIFES Nº 01/2025 
+PRÉ-INCUBAÇÃO CAPACITAÇÃO PARA 
+EMPREENDEDORES INOVADORES",03/04/25 a 30/09/25,120 horas,"Alda Maria Norbiato Torres,
+Agda da Silva de Paula,
+Fernanda de Oliveira Ramos,
+Cristiano da Silveira Colombo",-,0,0,3,Concluído,LICS
+2025,Submissão de Artigo Científico,A Proposal for a Reference Ontology in the Domain of Breast Cancer,"BRACIS 2025 - 35th 
+Brazilian Conference on Intelligent Systems ",08/05/25,-,"Agda da S. de Paula (IFES), 
+Beatriz M. C. Ruela (IFES), 
+Cauã G. Marvila (IFES), 
+Fernanda Silva (UNIFACIG), 
+Cristiano da Silveira Colombo (IFES)",A4,2,0,1,Rejeitado,LICS
+2024,"Apresentação de Trabalho 
+em Evento Científico","Wearable IoT Devices: Feasibility and 
+Effectiveness in Implementing Local Decision-Making 
+for Elderly Fall Detection","Simpósio Brasileiro de 
+Sistemas de Informação (SBSI 2025)",19/05/25 a 23/05/25,-,"Vitor Miller de Toledo, 
+Cristiano da Silveira Colombo, 
+Igor Henrique Beloti Pizetta, 
+Lucas Poubel, 
+Rafael Guimarães",A4,0,0,1,Concluído,IFES
+2025,Submissão de Artigo Científico,"Avaliação de Large Language Models para o 
+Reconhecimento de Entidades Nomeadas 
+em Prontuários Médicos","III Simpósio do Centro de Inovação em 
+Inteligência Artificial para a Saúde 
+(CI-IA Saúde): 
+IA Responsável na Saúde -
+Da Pesquisa à Prática Clínica",16/06/25,-,"Cauã Gomes Marvila,
+Cristiano da Silveira Colombo",-,1,0,0,Aceito,LICS
+2025,Submissão de Artigo Científico,"Ontologia de Referência no 
+Domínio do Câncer de Mama: 
+Um Modelo para Aplicações de 
+IA Responsável na Saúde","III Simpósio do Centro de Inovação em 
+Inteligência Artificial para a Saúde 
+(CI-IA Saúde): 
+IA Responsável na Saúde -
+Da Pesquisa à Prática Clínica",16/06/25,-,"Beatriz M. C. Ruela, 
+Agda da S. de Paula, 
+Cristiano da Silveira Colombo",-,1,0,1,Rejeitado,LICS
+2025,Submissão de Artigo Científico,"Anotação de Narrativas Clínicas 
+aos Moldes das Dependências Universais","Simpósio em Tecnologia da Informação 
+e da Linguagem Humana (STIL)",22/06/25,-,"Carlos Antônio Perini (UFMG), 
+Cristiano da Silveira Colombo (IFES), 
+Claudia Benevenute (IFES), 
+Adriana Pagano (UFMG)",-,0,0,0,Aceito,LICS
+2025,Submissão de Artigo Científico,AgriUrbis: Um aplicativo para o estímulo da Agricultura Urbana,"Information Systems in 
+Latin America (ISLA 2025)",27/06/25,-,"Thaynara Zamparini Xavier, 
+Marcos D. Lopes Ribeiro, 
+Daniel Adonai Rossi, 
+Raphael C. L. da Silva, 
+João V. F. R. de Matos, 
+Cristiano da Silveira Colombo",-,0,0,5,Aceito,IFES
+2025,Submissão de Artigo Científico,Agromonitor: Detecção de Pragas com Inteligência Artificial,"Information Systems in 
+Latin America (ISLA 2025)",27/06/25,-,"Lucas G. B. Altoé, 
+Lorenzo Rainha Gomes, 
+Miguel A. M. Bello, 
+Fábio A. S. Santos, 
+Cristiano da Silveira Colombo",-,0,0,4,Aceito,IFES
+2025,Submissão de Artigo Científico,"Natureza Tátil: Tecnologia e Acessibilidade em um 
+Dataset Multissensorial de Árvores Frutíferas 
+para a Inclusão de Pessoas com Deficiência","Information Systems in 
+Latin America (ISLA 2025)",27/06/25,-,"Andrey Magalhães Silva,
+Arthur Sandrini Gonçalves,
+Eduardo P. da C. Maifrede,
+Marcos A. M. Paes,
+Pedro Ferreira dos Santos,
+Cristiano da Silveira Colombo",-,0,0,5,Aceito,IFES
+2025,"Apresentação de Trabalho 
+em Evento Científico",Sistema Multiagente para Automação Inteligente de Editais Públicos,"XVII Simpósio Brasileiro de 
+Automação Inteligente (SBAI 2025)",29/07/25 a 01/08/25,-,"Yves de S. Barbosa,  
+Julia R. Rodrigues, 
+Caio T. Seares, 
+Igor H. B. Pizetta, 
+Cristiano da S. Colombo, 
+Lucas P. T. do Carmo",-,0,0,3,Concluído,IFES
+2025,"Apresentação de Trabalho 
+em Evento Científico",Agromonitor: Detecção de Pragas com Inteligência Artificial,"Information Systems in 
+Latin America (ISLA 2025)",11/08/25,-,"Lucas G. B. Altoé, 
+Lorenzo Rainha Gomes, 
+Miguel A. M. Bello, 
+Fábio A. S. Santos, 
+Cristiano da Silveira Colombo",-,0,0,4,Concluído,IFES
+2025,"Apresentação de Trabalho 
+em Evento Científico",AgriUrbis: Um aplicativo para o estímulo da Agricultura Urbana,"Information Systems in 
+Latin America (ISLA 2025)",12/08/25,-,"Thaynara Zamparini Xavier, 
+Marcos D. Lopes Ribeiro, 
+Daniel Adonai Rossi, 
+Raphael C. L. da Silva, 
+João V. F. R. de Matos, 
+Cristiano da Silveira Colombo",-,0,0,5,Concluído,IFES
+2025,Projeto de Iniciação Científica,"Desenvolvimento de Protótipo com LLMs para a 
+Classificação de Risco em Triagem Clínica 
+Baseada na Escala de Manchester",Instituto Federal do Espírito Santo (IFES),01/09/25,-,Cristiano da Silveira Colombo,-,1,0,7,Em andamento,LICS
+2025,"Apresentação de Trabalho 
+em Evento Científico","Avaliação de Large Language Models para o 
+Reconhecimento de Entidades Nomeadas 
+em Prontuários Médicos","III Simpósio do Centro de Inovação em 
+Inteligência Artificial para a Saúde 
+(CI-IA Saúde): 
+IA Responsável na Saúde -
+Da Pesquisa à Prática Clínica",25/09/25,-,"Cauã Gomes Marvila,
+Cristiano da Silveira Colombo",-,1,0,0,Concluído,LICS
+2025,"Apresentação de Trabalho 
+em Evento Científico","Anotação de Narrativas Clínicas 
+aos Moldes das Dependências Universais","Simpósio em Tecnologia da Informação 
+e da Linguagem Humana (STIL)",29/09/25 a 02/10/25,-,"Carlos Antônio Perini (UFMG), 
+Cristiano da Silveira Colombo (IFES), 
+Claudia Benevenute (IFES), 
+Adriana Pagano (UFMG)",-,0,0,0,Concluído,LICS
+2025,Submissão de Artigo Científico,"A Hybrid Approach for 
+Named Entity Recognition in 
+Clinical Case Reports","Simpósio Brasileiro de 
+Sistemas de Informação (SBSI 2026)",07/10/25,-,"Fernanda de Oliveira Ramos,
+Cauã Gomes Marvila,
+Cristiano da Silveira Colombo",A4,1,0,1,Aceito,LICS
+2024,Participação em Evento Científico,"A extração de entidades nomeadas em 
+relatos de casos clínicos","Congresso Brasileiro de 
+Informática em Saúde (CBIS)",08/10/24 a 11/10/24,-,"Alda Maria Norbiato Torres, 
+Raphael Pavani Manhães Bersot e 
+Cristiano da Silveira Colombo",A4,0,0,1,Concluído,LICS
+2025,"Programa de Inovação 
+Tecnológica e Empreendedorismo 
+(Programa Gênesis - FAPES)",IdentMiner,"EDITAL FAPES Nº 09/2025 
+PROGRAMA GÊNESIS
+Geração de Ideias Inovadoras e 
+Estímulo a Abertura de Startups",17/10/25,-,"Lucas Guimarães Bosio Altoé, 
+Ana Paula Meyer, 
+Arthur Sandrini Gonçalves,
+Eduardo Pereira Maifrede,
+Cristiano da Silveira Colombo",-,0,0,2,Em andamento,LICS
+2025,"Programa de Inovação 
+Tecnológica e Empreendedorismo 
+(Programa Gênesis - FAPES)",NOVASYS Digital,"EDITAL FAPES Nº 09/2025 
+PROGRAMA GÊNESIS
+Geração de Ideias Inovadoras e 
+Estímulo a Abertura de Startups",17/10/25,-,"Alda Maria Norbiato Torres,
+Fernanda de Oliveira Ramos,
+Cristiano da Silveira Colombo",-,0,0,2,Em andamento,LICS
+2025,"Programa de Inovação 
+Tecnológica e Empreendedorismo 
+(Programa Gênesis - FAPES)",TRIA,"EDITAL FAPES Nº 09/2025 
+PROGRAMA GÊNESIS
+Geração de Ideias Inovadoras e 
+Estímulo a Abertura de Startups",17/10/25,-,"Alícia Maria Zanette Moreira, 
+Isabella Sant’Anna Vaillant, 
+Cristiano da Silveira Colombo",-,0,0,2,Em andamento,LICS
+2025,Orientação de TCC,"OntoLiz: Uma Proposta de Ontologia no Domínio do Câncer de Mama 
+com Enfoque nos Fatores de Risco",-,26/11/25,-,Agda da Silva de Paula,-,0,0,1,Concluído,LICS
+2025,Orientação de TCC,"ClinptHyb: uma Abordagem Híbrida para o 
+Reconhecimento de Entidades Nomeadas 
+em Relatos de Casos Clínicos",-,28/11/25,-,Fernanda de Oliveira Ramos,-,0,0,1,Concluído,LICS
+2025,"Desenvolvimento e estruturação de 
+startups inovadoras no âmbito do 
+Programa Gênesis (FAPES)",IdentMiner,"EDITAL FAPES Nº 09/2025 
+PROGRAMA GÊNESIS
+Geração de Ideias Inovadoras e 
+Estímulo a Abertura de Startups",01/12/25,-,"Lucas Guimarães Bosio Altoé, 
+Ana Paula Meyer, 
+Arthur Sandrini Gonçalves,
+Eduardo Pereira Maifrede,
+Cristiano da Silveira Colombo",-,0,0,3,Em andamento,LICS
+2025,"Desenvolvimento e estruturação de 
+startups inovadoras no âmbito do 
+Programa Gênesis (FAPES)",NOVASYS Digital,"EDITAL FAPES Nº 09/2025 
+PROGRAMA GÊNESIS
+Geração de Ideias Inovadoras e 
+Estímulo a Abertura de Startups",01/12/25,-,"Alda Maria Norbiato Torres,
+Fernanda de Oliveira Ramos,
+Cristiano da Silveira Colombo",-,0,0,2,Em andamento,LICS
+2025,Submissão de Projeto de Iniciação Científica,"Plataforma Inteligente Baseada em Evidências 
+para a Saúde Pública Regional",EDITAL FAPES/SEDU Nº 17/2025,01/12/25,-,Cristiano da Silveira Colombo,-,0,0,0,Projeto habilitado,LICS
+2025,"Desenvolvimento e estruturação de 
+startups inovadoras no âmbito do 
+Programa Gênesis (FAPES)",TRIA,"EDITAL FAPES Nº 09/2025 
+PROGRAMA GÊNESIS
+Geração de Ideias Inovadoras e 
+Estímulo a Abertura de Startups",01/12/25,-,"Alícia Maria Zanette Moreira, 
+Isabella Sant’Anna Vaillant, 
+Cristiano da Silveira Colombo",-,0,0,2,Em andamento,LICS
+2025,Orientação de TCC,Uso de Deep Learning na Identificação de Cáries,-,02/12/25,-,Bianca da Silva Rodrigues,-,0,0,1,Concluído,LICS
+2025,Submissão de Projeto de Inovação Tecnológica,IdentMiner,"Edital nº 18/2025 Programa Nacional de 
+Apoio à Geração de Empreendimentos Inovadores 
+Programa Centelha 3 – Espírito Santo",05/12/25,-,"Lucas Guimarães Bosio Altoé, 
+Ana Paula Meyer, 
+Arthur Sandrini Gonçalves,
+Eduardo Pereira Maifrede,
+Cristiano da Silveira Colombo",-,0,0,3,Sob julgamento,LICS
+2025,Submissão de Projeto de Inovação Tecnológica,NOVASYS Digital,"Edital nº 18/2025 Programa Nacional de 
+Apoio à Geração de Empreendimentos Inovadores 
+Programa Centelha 3 – Espírito Santo",05/12/25,-,"Alda Maria Norbiato Torres,
+Fernanda de Oliveira Ramos,
+Cristiano da Silveira Colombo",-,0,0,2,Sob julgamento,LICS
+2025,Submissão de Projeto de Inovação Tecnológica,TRIA,"Edital nº 18/2025 Programa Nacional de 
+Apoio à Geração de Empreendimentos Inovadores 
+Programa Centelha 3 – Espírito Santo",05/12/25,-,"Alícia Maria Zanette Moreira, 
+Isabella Sant’Anna Vaillant, 
+Cristiano da Silveira Colombo",-,0,0,2,Sob julgamento,LICS
+2025,Orientação de TCC,"Aplicação de RAG na Consulta de Editais dos 
+Cursos Técnicos Integrados ao Ensino Médio do 
+IFES - Campus Cachoeiro de Itapemirim",-,09/12/25,-,João Paulo Gueller Azevedo,-,0,0,1,Concluído,LICS
+2025,Orientação de TCC,"Automatização do Acesso a Informações de Medicamentos: 
+Proposta de um Chatbot Baseado em Evidências Científicas",-,09/12/25,-,Leonardo Rodrigues Cavalcante,-,0,0,1,Concluído,LICS
+2025,Orientação de TCC,"Geração Automática de Questões com RAG e 
+Processamento de Linguagem Natural: 
+Um Estudo Aplicado ao Regulamento da World Triathlon",-,09/12/25,-,Yuri Pessanha R. G. Carneiro,-,0,0,1,Concluído,LICS
+2025,Registro de Programa de Computador,TRIA,-,15/12/25,-,"Alícia Maria Zanette Moreira, 
+Isabella Sant’Anna Vaillant, 
+Cristiano da Silveira Colombo",-,0,0,2,Em andamento,LICS
+2025,Registro de Programa de Computador,NOVASYS Digital,-,16/12/25,-,"Alda Maria Norbiato Torres,
+Fernanda de Oliveira Ramos,
+Cristiano da Silveira Colombo",-,0,0,2,Em andamento,LICS
+2025,Orientação de TCC,"Análise do Ciclo de Vida: Coleta e Análise de Dados 
+da Emissão de Carbono Equivalente de um Campus do Ifes",-,-,-,Lucas Ferri,-,0,0,1,Em andamento,LICS
+2025,Orientação de TCC,Classificação de Músicas para Piano Utilizando Machine Learning,-,-,-,Diogo Tosta,-,0,0,1,Em andamento,LICS
+2025,Orientação de TCC,Sistema de Apoio a Decisão Clínica Utilizando NLP e ML,-,-,-,Ângelo ,-,0,0,1,Em andamento,LICS
+2025,Orientação de TCC,"Um Repositório Estruturado de Casos Clínicos 
+Extraídos de Artigos Científicos para Apoio a 
+Pesquisas Baseadas em Evidências ",-,-,-,Caio Torres Seares,-,0,0,1,Em andamento,LICS
