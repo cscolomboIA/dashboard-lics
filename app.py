@@ -8,7 +8,7 @@ try:
     page_icon = "logo_lics.jpg" 
     st.set_page_config(page_title="Dashboard LICS", layout="wide", page_icon=page_icon)
 except:
-    st.set_page_config(page_title="Dashboard LICS", layout="wide", page_icon="🧬")
+    st.set_page_config(page_title="Dashboard LICS", layout="wide")
 
 # --- BARRA LATERAL (APENAS LOGO E INFO) ---
 if os.path.exists("logo_lics.jpg"):
@@ -25,7 +25,7 @@ with col_header2:
     st.title("Painel de Controle Estratégico")
     st.markdown("Monitoramento de ações de Pesquisa, Inovação e Formação (Ciclo 2024-2025)")
 
-# --- CARREGAMENTO DE DADOS ---
+# --- CARREGAMENTO E TRATAMENTO DE DADOS ---
 @st.cache_data
 def load_data():
     df = pd.read_csv("dados.csv")
@@ -44,6 +44,23 @@ def load_data():
     for col in cols_alunos:
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
     df['Total_Alunos'] = df[cols_alunos].sum(axis=1)
+
+    # --- NOVA LÓGICA DE CATEGORIZAÇÃO (SEM ÍCONES) ---
+    def definir_categoria(tipo):
+        tipo = str(tipo).lower()
+        if any(x in tipo for x in ['inovação', 'startup', 'gênesis', 'centelha', 'software', 'patente', 'grupo', 'incubação']):
+            return 'Inovação & Startups'
+        elif any(x in tipo for x in ['artigo', 'revista', 'periódico', 'livro', 'publicação']):
+            return 'Produção Intelectual'
+        elif any(x in tipo for x in ['orientação', 'tcc', 'curso', 'minicurso', 'iniciação', 'pic', 'ensino']):
+            return 'Formação & Orientações'
+        elif any(x in tipo for x in ['evento', 'apresentação', 'palestra', 'participação']):
+            return 'Eventos & Divulgação'
+        else:
+            return 'Outros'
+
+    df['Categoria_Macro'] = df['Tipo da atividade'].apply(definir_categoria)
+    
     return df
 
 try:
@@ -103,62 +120,69 @@ if df_filtered.empty:
 
 # --- METRICAS PRINCIPAIS (KPIs) ---
 st.markdown("---")
+# Recalculando KPIs baseados nas novas categorias
+total_inovacao = len(df_filtered[df_filtered['Categoria_Macro'] == 'Inovação & Startups'])
+total_intelectual = len(df_filtered[df_filtered['Categoria_Macro'] == 'Produção Intelectual'])
+total_formacao = len(df_filtered[df_filtered['Categoria_Macro'] == 'Formação & Orientações'])
+total_alunos = int(df_filtered['Total_Alunos'].sum())
+
 col1, col2, col3, col4 = st.columns(4)
-col1.metric("Total de Atividades", len(df_filtered))
-col2.metric("Envolvimento de Alunos", int(df_filtered['Total_Alunos'].sum()))
-col3.metric("Produção Científica", len(df_filtered[df_filtered['Tipo da atividade'].str.contains("Artigo", case=False, na=False)]))
-col4.metric("Projetos & Inovação", len(df_filtered[df_filtered['Tipo da atividade'].str.contains("Projeto|Programa|Inovação", case=False, na=False)]))
+col1.metric("Inovação & Startups", total_inovacao)
+col2.metric("Produção Intelectual", total_intelectual)
+col3.metric("Formação (Orientações)", total_formacao)
+col4.metric("Alunos Envolvidos", total_alunos)
 
 # --- GRÁFICOS (ABAS) ---
-tab1, tab2, tab3 = st.tabs(["Visão Geral", "Envolvimento Discente", "Dados Detalhados"])
+tab1, tab2, tab3 = st.tabs(["Visão Estratégica", "Envolvimento Discente", "Dados Detalhados"])
 
 with tab1:
     col_g1, col_g2 = st.columns(2)
     with col_g1:
-        st.subheader("Taxa de Sucesso")
-        fig_status = px.pie(df_filtered, names='Status', title='Distribuição por Status', hole=0.4)
-        st.plotly_chart(fig_status, use_container_width=True)
+        st.subheader("Distribuição por Macro-Categoria")
+        fig_cat = px.pie(
+            df_filtered, 
+            names='Categoria_Macro', 
+            title='Onde o LICS concentra esforços?', 
+            hole=0.4,
+            color='Categoria_Macro',
+            color_discrete_map={
+                'Inovação & Startups': '#FF4B4B', 
+                'Produção Intelectual': '#1C83E1', 
+                'Formação & Orientações': '#00CC96', 
+                'Eventos & Divulgação': '#FFA15A', 
+                'Outros': '#d3d3d3'
+            }
+        )
+        st.plotly_chart(fig_cat, use_container_width=True)
     
     with col_g2:
-        st.subheader("Atividades por Categoria")
+        st.subheader("Detalhamento das Ações")
+        df_bar = df_filtered.groupby(['Categoria_Macro', 'Tipo da atividade']).size().reset_index(name='Quantidade')
         
-        # --- MELHORIA DE UX AQUI ---
-        # 1. Preparar os dados com contagem E porcentagem
-        contagem_tipo = df_filtered['Tipo da atividade'].value_counts().reset_index()
-        contagem_tipo.columns = ['Tipo', 'Quantidade']
-        contagem_tipo['Percentual'] = (contagem_tipo['Quantidade'] / contagem_tipo['Quantidade'].sum()) * 100
-        
-        # 2. Criar gráfico com gradiente de cor e ordenação
-        fig_tipo = px.bar(
-            contagem_tipo, 
+        fig_bar = px.bar(
+            df_bar, 
             x='Quantidade', 
-            y='Tipo', 
+            y='Categoria_Macro', 
+            color='Tipo da atividade', 
             orientation='h',
-            text='Quantidade', # Mostra o número na ponta da barra
-            color='Quantidade', # A cor muda conforme o valor (Heatmap)
-            color_continuous_scale='Teal', # Escala de cor profissional (Teal combina com saúde)
-            custom_data=['Percentual'] # Passa o percentual para o tooltip
+            text='Quantidade',
+            title="Composição de cada Categoria",
+            labels={'Categoria_Macro': 'Área de Atuação'}
         )
-        
-        # 3. Ajustes finos de Layout
-        fig_tipo.update_layout(
-            yaxis={'categoryorder':'total ascending'}, # Garante que a maior barra fique no topo
-            coloraxis_showscale=False, # Esconde a legenda de cores para limpar o visual
-            xaxis_title=None,
-            yaxis_title=None
-        )
-        
-        # 4. Tooltip personalizado (Ao passar o mouse)
-        fig_tipo.update_traces(
-            textposition='outside', 
-            hovertemplate='<b>%{y}</b><br>Quantidade: %{x}<br>Representatividade: %{customdata[0]:.1f}%<extra></extra>'
-        )
-        
-        st.plotly_chart(fig_tipo, use_container_width=True)
+        fig_bar.update_layout(yaxis={'categoryorder':'total ascending'})
+        st.plotly_chart(fig_bar, use_container_width=True)
 
-    st.subheader("Evolução Temporal")
-    df_evolucao = df_filtered.groupby(['Ano', 'Tipo da atividade']).size().reset_index(name='Quantidade')
-    fig_evolucao = px.bar(df_evolucao, x="Ano", y="Quantidade", color="Tipo da atividade", barmode='group')
+    st.subheader("Evolução das Categorias (2024-2025)")
+    df_evolucao = df_filtered.groupby(['Ano', 'Categoria_Macro']).size().reset_index(name='Quantidade')
+    fig_evolucao = px.bar(
+        df_evolucao, 
+        x="Ano", 
+        y="Quantidade", 
+        color="Categoria_Macro", 
+        barmode='group',
+        text='Quantidade'
+    )
+    fig_evolucao.update_traces(textposition='outside')
     st.plotly_chart(fig_evolucao, use_container_width=True)
 
 with tab2:
@@ -171,21 +195,18 @@ with tab2:
             df_filtered['Alunos_BSI'].sum()
         ]
     })
-    # Também aplicando a melhoria visual aqui para consistência
     fig_alunos = px.bar(
         dados_alunos, 
         x='Nível de Ensino', 
         y='Quantidade', 
-        color='Quantidade', # Cor baseada no valor
-        color_continuous_scale='Greens', # Escala verde para diferenciar da outra aba
+        color='Quantidade', 
+        color_continuous_scale='Greens',
         text='Quantidade'
     )
     fig_alunos.update_traces(textposition='outside')
     fig_alunos.update_layout(coloraxis_showscale=False, yaxis_title=None, xaxis_title=None)
-    
     st.plotly_chart(fig_alunos, use_container_width=True)
 
 with tab3:
     st.subheader("Tabela de Registros Filtrados")
-    # Melhoria na tabela: Ocultar o índice numérico padrão do Pandas para ficar mais limpo
     st.dataframe(df_filtered.set_index('Ano'), use_container_width=True)
