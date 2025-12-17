@@ -10,7 +10,7 @@ try:
 except:
     st.set_page_config(page_title="Dashboard LICS", layout="wide")
 
-# --- BARRA LATERAL ---
+# --- BARRA LATERAL (APENAS LOGO E INFO) ---
 if os.path.exists("logo_lics.jpg"):
     st.sidebar.image("logo_lics.jpg", use_container_width=True)
     st.sidebar.markdown("---")
@@ -45,15 +45,17 @@ def load_data():
         df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
     df['Total_Alunos'] = df[cols_alunos].sum(axis=1)
 
-    # Categorização simples (apenas para organização interna, sem exibição visual pesada)
+    # Categorização Macro (Sem ícones)
     def definir_categoria(tipo):
         tipo = str(tipo).lower()
-        if any(x in tipo for x in ['inovação', 'startup', 'gênesis', 'centelha', 'software', 'patente']):
+        if any(x in tipo for x in ['inovação', 'startup', 'gênesis', 'centelha', 'software', 'patente', 'grupo', 'incubação']):
             return 'Inovação & Startups'
-        elif any(x in tipo for x in ['artigo', 'revista', 'periódico', 'livro']):
+        elif any(x in tipo for x in ['artigo', 'revista', 'periódico', 'livro', 'publicação']):
             return 'Produção Intelectual'
-        elif any(x in tipo for x in ['orientação', 'tcc', 'curso', 'minicurso', 'iniciação']):
+        elif any(x in tipo for x in ['orientação', 'tcc', 'curso', 'minicurso', 'iniciação', 'pic', 'ensino']):
             return 'Formação & Orientações'
+        elif any(x in tipo for x in ['evento', 'apresentação', 'palestra', 'participação']):
+            return 'Eventos & Divulgação'
         else:
             return 'Outros'
 
@@ -98,6 +100,15 @@ if df_filtered.empty:
     st.warning("Nenhum dado encontrado. Ajuste os filtros acima.")
     st.stop()
 
+# --- CORES ---
+mapa_cores = {
+    'Inovação & Startups': '#FF4B4B', 
+    'Produção Intelectual': '#1C83E1', 
+    'Formação & Orientações': '#00CC96', 
+    'Eventos & Divulgação': '#FFA15A', 
+    'Outros': '#d3d3d3'
+}
+
 # --- KPIs ---
 st.markdown("---")
 total_inovacao = len(df_filtered[df_filtered['Categoria_Macro'] == 'Inovação & Startups'])
@@ -115,76 +126,86 @@ col4.metric("Alunos Envolvidos", total_alunos)
 tab1, tab2, tab3 = st.tabs(["Visão Estratégica", "Envolvimento Discente", "Dados Detalhados"])
 
 with tab1:
-    # --- COLUNA 1: SELETOR DE ATIVIDADE (O PEDIDO PRINCIPAL) ---
+    # --- PARTE 1: VISÃO MACRO (CATEGORIAS) ---
+    col_g1, col_g2 = st.columns(2)
+    with col_g1:
+        st.subheader("Onde o LICS concentra esforços?")
+        fig_cat = px.pie(
+            df_filtered, 
+            names='Categoria_Macro', 
+            hole=0.4,
+            color='Categoria_Macro',
+            color_discrete_map=mapa_cores
+        )
+        fig_cat.update_layout(margin=dict(t=0, b=0))
+        st.plotly_chart(fig_cat, use_container_width=True)
+    
+    with col_g2:
+        st.subheader("Evolução das Categorias")
+        df_evolucao = df_filtered.groupby(['Ano', 'Categoria_Macro']).size().reset_index(name='Quantidade')
+        fig_evolucao = px.bar(
+            df_evolucao, 
+            x="Ano", 
+            y="Quantidade", 
+            color="Categoria_Macro", 
+            barmode='group',
+            text='Quantidade',
+            color_discrete_map=mapa_cores
+        )
+        fig_evolucao.update_traces(textposition='outside')
+        fig_evolucao.update_layout(margin=dict(t=0, b=0), xaxis=dict(tickmode='linear', dtick=1))
+        st.plotly_chart(fig_evolucao, use_container_width=True)
+
+    st.markdown("---") # Divisória Visual
+
+    # --- PARTE 2: DETALHAMENTO (EXPLORADOR) ---
     col_detalhe_1, col_detalhe_2 = st.columns([2, 1])
     
     with col_detalhe_1:
-        st.subheader("Explorador de Atividades")
+        st.subheader("🔎 Explorador de Atividades")
+        st.markdown("Selecione um tipo de atividade para ver a evolução e lista de títulos.")
         
-        # Cria lista de atividades disponíveis nos dados filtrados
+        # Selectbox
         lista_atividades = sorted(df_filtered['Tipo da atividade'].unique())
+        atividade_selecionada = st.selectbox("Selecione a atividade:", options=lista_atividades)
         
-        # O Combobox (Selectbox)
-        atividade_selecionada = st.selectbox("Selecione para ver detalhes:", options=lista_atividades)
-        
-        # Filtra os dados apenas para a atividade selecionada
+        # Dados filtrados
         df_atividade = df_filtered[df_filtered['Tipo da atividade'] == atividade_selecionada]
         
-        # Mostra métrica específica
-        st.metric(f"Total de: {atividade_selecionada}", len(df_atividade))
-        
-        # Gráfico da Atividade Selecionada
+        # Gráfico pequeno (Sparkline style)
         grafico_atividade = df_atividade.groupby('Ano').size().reset_index(name='Quantidade')
-        fig_atividade = px.bar(
-            grafico_atividade, 
-            x='Ano', 
-            y='Quantidade', 
-            title=f"Evolução: {atividade_selecionada}",
-            text='Quantidade'
-        )
-        fig_atividade.update_traces(textposition='outside')
-        fig_atividade.update_layout(xaxis=dict(tickmode='linear', dtick=1)) # Garante mostrar ano a ano
+        fig_atividade = px.bar(grafico_atividade, x='Ano', y='Quantidade', text='Quantidade', height=250)
+        fig_atividade.update_layout(margin=dict(l=0, r=0, t=10, b=0), xaxis=dict(tickmode='linear', dtick=1))
         st.plotly_chart(fig_atividade, use_container_width=True)
         
-        # Tabela simples com os títulos dessa atividade
+        # Lista Expansível
         with st.expander(f"Ver lista de títulos ({len(df_atividade)})", expanded=True):
             st.dataframe(
                 df_atividade[['Ano', 'Titulo', 'Status']].reset_index(drop=True),
                 use_container_width=True
             )
 
-    # --- COLUNA 2: HALL DE PUBLICAÇÕES (EVENTOS) ---
     with col_detalhe_2:
-        st.subheader("Onde Publicamos?")
-        st.markdown("Eventos e Revistas com artigos aceitos/concluídos:")
+        st.subheader("🏆 Onde Publicamos?")
+        st.markdown("Eventos/Revistas com artigos aceitos:")
         
-        # Filtra apenas Artigos que foram Aceitos ou Concluídos (Independente do filtro de situação global, aqui olhamos o sucesso)
-        # Nota: Usamos o dataframe original (df) ou filtrado (df_filtered) dependendo se quer respeitar os filtros de ano
-        termos_artigo = ['artigo', 'publicação', 'revista']
-        termos_sucesso = ['aceito', 'concluído']
+        # Filtro inteligente para Hall de Publicações
+        termos_artigo = ['artigo', 'publicação', 'revista', 'periódico']
+        termos_sucesso = ['aceito', 'concluído', 'publicado']
         
         df_pubs = df_filtered[
             (df_filtered['Tipo da atividade'].str.lower().str.contains('|'.join(termos_artigo))) &
             (df_filtered['Status'].str.lower().str.contains('|'.join(termos_sucesso)))
         ]
         
-        # Pega lista única de eventos
         eventos_unicos = sorted(df_pubs['Evento_Periodico'].dropna().unique())
         
         if len(eventos_unicos) > 0:
             for evento in eventos_unicos:
-                # Limpa traços soltos se houver
                 if evento.strip() != "-":
-                    st.markdown(f"- **{evento}**")
+                    st.markdown(f"✅ **{evento}**")
         else:
-            st.info("Nenhuma publicação encontrada nos critérios filtrados.")
-            
-        st.markdown("---")
-        st.markdown("**Distribuição Macro**")
-        # Gráfico de Pizza Pequeno para contexto geral
-        fig_pizza = px.pie(df_filtered, names='Categoria_Macro', hole=0.5)
-        fig_pizza.update_layout(showlegend=False, margin=dict(t=0, b=0, l=0, r=0))
-        st.plotly_chart(fig_pizza, use_container_width=True)
+            st.info("Nenhum registro encontrado.")
 
 with tab2:
     st.subheader("Participação de Alunos por Nível")
