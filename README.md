@@ -1,1 +1,3 @@
-Esta é uma alteração de exemplo
+Esta é uma alteração de exemplo.
+
+Mais uma alteração de exemplo.
